@@ -1,0 +1,85 @@
+{
+  "name": "@ajtii/commons-validation",
+  "version": "0.0.0",
+  "description": "TODO",
+  "keywords": ["validation", "sanitization"],
+  "homepage": "https://github.com/ajtii-com/commons-validation#readme",
+  "bugs": {
+    "url": "https://github.com/ajtii-com/commons-validation/issues"
+  },
+  "license": "MIT",
+  "author": "Ajtii Team <ajtii.com@gmail.com>",
+  "contributors": ["David Bojnansky <david.bojnansky@gmail.com>"],
+  "files": [
+    "dist/",
+    "!dist/test/",
+    "!dist/**/*.spec.*",
+    "LICENSE",
+    "package.json",
+    "README.md"
+  ],
+  "main": "dist/index.js",
+  "repository": "github:ajtii-com/commons-validation",
+  "scripts": {
+    "_tsc-build": "tsc -p tsconfig.build.json",
+    "_tsc-test": "tsc -p tsconfig.test.json",
+    "_cp-types": "copyfiles -u 2 src/types/**/*.d.ts dist/types/",
+    "_test": "cross-env NODE_ENV=testing   mocha --opts mocha.opts",
+    "_pub": "npm publish",
+    "_clean-out": "rimraf dist/",
+    "_git-push": "git push origin",
+    "lint": "tslint src/**/*.ts",
+    "pretty": "prettier --write src/**/*.ts",
+    "build": "yarn _clean-out && yarn _tsc-build && yarn _cp-types",
+    "test": "yarn _clean-out && yarn _tsc-test && yarn _cp-types && yarn _test",
+    "cov": "nyc   yarn test",
+    "pub": "yarn test && yarn _pub",
+    "share": "yarn pretty && yarn lint && yarn test && yarn _git-push"
+  },
+  "dependencies": {
+    "@ajtii/commons-env": "^0.0.0",
+    "@ajtii/commons-error": "^0.0.0",
+    "dependency-graph": "^0.7.0"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.1.2",
+    "@types/chai-string": "^1.4.0",
+    "@types/mocha": "^2.2.48",
+    "@types/node": "^8.9.4",
+    "@types/sinon": "^4.1.3",
+    "chai": "^4.1.2",
+    "chai-string": "^1.4.0",
+    "copyfiles": "^2.0.0",
+    "cross-env": "^5.1.3",
+    "mocha": "^5.0.3",
+    "nyc": "^11.4.1",
+    "prettier": "^1.12.1",
+    "rimraf": "^2.6.2",
+    "sinon": "^4.3.0",
+    "source-map-support": "^0.5.3",
+    "tslint": "^5.10.0",
+    "tslint-config-prettier": "^1.10.0",
+    "typescript": "^2.7.2",
+    "yarn": "^1.5.1"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": ">=8"
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org",
+    "access": "public"
+  },
+  "types": "dist/index.d.ts",
+  "nyc": {
+    "include": ["dist/**/*.js"],
+    "exclude": ["dist/test/**/*.js", "dist/**/*.spec.js"],
+    "reporter": ["text", "lcov"],
+    "cache": true,
+    "all": true
+  },
+  "prettier": {
+    "arrowParens": "always",
+    "trailingComma": "all"
+  }
+}

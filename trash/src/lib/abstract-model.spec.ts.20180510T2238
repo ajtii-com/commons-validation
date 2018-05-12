@@ -1,0 +1,137 @@
+import { expect } from "chai";
+import {
+  AbstractModel,
+  RawModel,
+  transformIfAllDepsUnset,
+  transformIfOneDepUnset,
+} from ".";
+import {
+  createTest100ModelClass,
+  ITest100Model,
+  ITest100ModelConstructor,
+  Test1Attr,
+  Test1Model,
+} from "../test";
+
+describe("AbstractModel", () => {
+  describe("defineAttr", () => {
+    let Test100Model: ITest100ModelConstructor;
+    let Test100ModelProto: ITest100Model;
+    let test100Model: ITest100Model;
+
+    beforeEach(() => {
+      Test100Model = createTest100ModelClass();
+      Test100ModelProto = Test100Model.prototype;
+      test100Model = new Test100Model({
+        get(name: string) {
+          return "x";
+        },
+      } as RawModel);
+    });
+
+    it("should define an attribute on prototype only", () => {
+      Test100ModelProto.defineAttr("test", Test1Attr);
+
+      expect(AbstractModel.prototype.attrDefs).to.deep.eq({});
+      expect(Test100ModelProto.attrDefs).to.have.property("test");
+      expect(test100Model.attrDefs).to.eq(Test100ModelProto.attrDefs);
+    });
+
+    it("should throw an error if trying to define an attribute on instance of model", () => {
+      expect(() => {
+        test100Model.defineAttr("test", Test1Attr);
+      }).to.throw(/prototype only/);
+    });
+
+    it("should throw an error if trying to define the same attribute twice", () => {
+      Test100ModelProto.defineAttr("test", Test1Attr);
+
+      expect(() => {
+        Test100ModelProto.defineAttr("test", Test1Attr);
+      }).to.throw(/already defined/);
+    });
+
+    it("should define an attribute using default $options if no $options given", () => {
+      Test100ModelProto.defineAttr("test", Test1Attr);
+
+      expect(Test100ModelProto.attrDefs).to.have.property("test");
+      expect(Test100ModelProto.attrDefs.test.type).that.eqls(Test1Attr);
+      expect(Test100ModelProto.attrDefs.test.nullable).that.eqls(false);
+      expect(Test100ModelProto.attrDefs.test.defaultValue).that.eqls(null);
+      expect(Test100ModelProto.attrDefs.test.dependsOn).that.is.deep.eq([]);
+      expect(Test100ModelProto.attrDefs.test.transform).that.eqls(
+        transformIfOneDepUnset,
+      );
+      expect(Test100ModelProto.attrDefs.test.args).that.is.deep.eq([]);
+      expect(Test100ModelProto.attrDefs.test.getDefaultValue()).to.eq(
+        Test100ModelProto.attrDefs.test.defaultValue,
+      );
+    });
+
+    it("should define an attribute with given $options", () => {
+      Test100ModelProto.defineAttr("test", Test1Attr, {
+        nullable: true,
+        defaultValue: "x",
+        dependsOn: ["y"],
+        transform: transformIfAllDepsUnset,
+        args: ["z", "y", "x"],
+        getDefaultValue() {
+          return "know nothing";
+        },
+      });
+
+      expect(Test100ModelProto.attrDefs).to.have.property("test");
+      expect(Test100ModelProto.attrDefs.test.type).that.eqls(Test1Attr);
+      expect(Test100ModelProto.attrDefs.test.nullable).that.eqls(true);
+      expect(Test100ModelProto.attrDefs.test.defaultValue).that.eqls("x");
+      expect(Test100ModelProto.attrDefs.test.dependsOn).that.is.deep.eq(["y"]);
+      expect(Test100ModelProto.attrDefs.test.transform).that.eqls(
+        transformIfAllDepsUnset,
+      );
+      expect(Test100ModelProto.attrDefs.test.args).that.is.deep.eq([
+        "z",
+        "y",
+        "x",
+      ]);
+      expect(Test100ModelProto.attrDefs.test.getDefaultValue()).to.eq(
+        "know nothing",
+      );
+    });
+
+    it("should define property getter and setter", () => {
+      Test100ModelProto.defineAttr("test", Test1Attr);
+
+      expect(test100Model.test).to.eq("x");
+    });
+
+    describe("$options.defaultValue", () => {
+      it("should be an empty object when $type is model", () => {
+        Test100ModelProto.defineAttr("test", Test1Model);
+
+        expect(Test100ModelProto.attrDefs).to.have.property("test");
+        expect(Test100ModelProto.attrDefs.test.defaultValue).that.is.deep.eq(
+          {},
+        );
+        expect(() => {
+          Test100ModelProto.attrDefs.test.getDefaultValue();
+        }).not.to.throw();
+        expect(Test100ModelProto.attrDefs.test.getDefaultValue()).to.eq(
+          Test100ModelProto.attrDefs.test.defaultValue,
+        );
+      });
+    });
+
+    describe("$options.getDefaultValue", () => {
+      it("should throw an error if $type is an attribute and $options.defaultValue is an object", () => {
+        Test100ModelProto.defineAttr("test", Test1Attr, {
+          defaultValue: { x: 42 },
+        });
+
+        expect(Test100ModelProto.attrDefs).to.have.property("test");
+        expect(() => {
+          Test100ModelProto.attrDefs.test.getDefaultValue();
+        }).to.throw(/getDefaultValue/);
+      });
+    });
+  });
+});
