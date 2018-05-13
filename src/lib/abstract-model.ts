@@ -25,7 +25,7 @@ export abstract class AbstractModel {
 
   public defineAttr(
     name: string,
-    type: IAttrConstructor | IModelConstructor,
+    type: IAttrConstructor | IModelConstructor<any>,
     options: IPartialAttrOptions = {},
   ) {
     if (this.isProto === false) {

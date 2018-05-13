@@ -4,7 +4,7 @@ import { AbstractAttr, Result } from "..";
 export class Test1Attr extends AbstractAttr {
   public readonly label = "Test 1 Attribute";
 
-  public validate(nullable: boolean, allowB: boolean = false) {
+  protected async doValidate(nullable: boolean, allowB: any) {
     if (typeof allowB === "undefined") {
       allowB = false;
     }
@@ -13,10 +13,6 @@ export class Test1Attr extends AbstractAttr {
       throw newLogicError("$allowB must be a boolean");
     }
 
-    return super.validate(nullable, allowB);
-  }
-
-  protected async doValidate(nullable: boolean, allowB: boolean) {
     if (!nullable && this.value === null) {
       return this.fail("Value must be entered");
     }

@@ -36,12 +36,15 @@ export class ObjectFactory {
     return attr;
   }
 
-  public newModelOf(type: IModelConstructor, value: any = {}): IModel {
-    const attr = new type(
+  public newModelOf<T extends IModel>(
+    type: IModelConstructor<T>,
+    value: any = {},
+  ) {
+    const model = new type(
       new RawModel(new AttrTree(), this, this.objectProvider),
     );
-    attr.init();
-    attr.value = value;
-    return attr;
+    model.init();
+    model.value = value;
+    return model;
   }
 }

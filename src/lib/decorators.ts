@@ -7,7 +7,7 @@ import {
 } from ".";
 
 export function attr(
-  type: IAttrConstructor | IModelConstructor,
+  type: IAttrConstructor | IModelConstructor<any>,
   options: IPartialAttrOptions = {},
 ) {
   return (model: IModel, name: string) => {

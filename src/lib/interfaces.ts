@@ -16,7 +16,7 @@ export interface IAttrOptions {
 }
 
 export interface IAttrDef extends IAttrOptions {
-  readonly type: IAttrConstructor | IModelConstructor;
+  readonly type: IAttrConstructor | IModelConstructor<any>;
 }
 
 export interface IAttrDefs {
@@ -33,10 +33,10 @@ export interface IAttrConstructor {
   new (attr: RawAttr): IAttr;
 }
 
-export interface IModelConstructor {
+export interface IModelConstructor<T extends IModel> {
   readonly classType: "model";
 
-  new (model: RawModel): IModel;
+  new (model: RawModel): T;
 }
 
 export interface IFail {

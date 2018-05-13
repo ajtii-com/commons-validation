@@ -1,3 +1,4 @@
+import { newLogicError } from "@ajtii/commons-error";
 import { Test1Attr } from ".";
 import { AbstractModel, attr, Result } from "..";
 
@@ -6,30 +7,39 @@ export class Test1Model extends AbstractModel {
 
   @attr(Test1Attr)
   // tslint:disable-next-line:member-access
-  public attr1!: string;
+  public attr1!: string | null;
 
   @attr(Test1Attr, {
-    defaultValue: "a",
+    defaultValue: "A",
   })
   // tslint:disable-next-line:member-access
-  public attr2!: string;
+  public attr2!: string | null;
 
   @attr(Test1Attr, {
-    nullable: false,
+    nullable: true,
   })
   // tslint:disable-next-line:member-access
   public attr3!: string;
 
   @attr(Test1Attr, {
+    dependsOn: ["attr1"],
     args: [true],
   })
   // tslint:disable-next-line:member-access
-  public attr4!: string;
+  public attr4!: string | null;
 
   protected async doValidate(
     nullable: boolean,
     forceEqualityOfAttrs2and3: any,
   ) {
+    if (typeof forceEqualityOfAttrs2and3 === "undefined") {
+      forceEqualityOfAttrs2and3 = false;
+    }
+
+    if (typeof forceEqualityOfAttrs2and3 !== "boolean") {
+      throw newLogicError("$forceEqualityOfAttrs2and3 must be a boolean");
+    }
+
     if (!nullable && this.value === null) {
       return this.fail("Object must be entered");
     }
