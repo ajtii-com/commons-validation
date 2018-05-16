@@ -1,6 +1,8 @@
 import { newLogicError, newLogicErrorCausedBy } from "@ajtii/commons-error";
 import { DepGraph } from "dependency-graph";
-import { AbstractAttr, AbstractModel, IAttr, IModel } from ".";
+import { AbstractAttr } from "./abstract-attr";
+import { AbstractModel } from "./abstract-model";
+import { IAttr, IModel } from "./types";
 
 export class AttrTree {
   private readonly tree: DepGraph<IAttr | IModel> = new DepGraph();

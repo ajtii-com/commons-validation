@@ -1,5 +1,7 @@
 import { newLogicError } from "@ajtii/commons-error";
-import { IFail, IReadonlyFails, IResultResponse, isResultResponse } from ".";
+import { IFail, IResultResponse } from "./interfaces";
+import { isResultResponse } from "./predications";
+import { IReadonlyFails } from "./types";
 
 export class Result {
   private _fails: IFail[] = [];

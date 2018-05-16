@@ -1,12 +1,7 @@
-import {
-  AbstractAttr,
-  AbstractModel,
-  IAttrDefs,
-  IAttrOptions,
-  IDepValues,
-  IFail,
-  Result,
-} from ".";
+import { AbstractAttr } from "./abstract-attr";
+import { AbstractModel } from "./abstract-model";
+import { IAttrDefs, IAttrOptions, IDepValues, IFail } from "./interfaces";
+import { Result } from "./result";
 
 export type IPartialAttrOptions = Partial<IAttrOptions>;
 

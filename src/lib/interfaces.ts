@@ -1,5 +1,8 @@
 import { Env, Side } from "@ajtii/commons-env";
-import { IAttr, IModel, RawAttr, RawModel, Result, Transformator } from ".";
+import { RawAttr } from "./raw-attr";
+import { RawModel } from "./raw-model";
+import { Result } from "./result";
+import { IAttr, IModel, Transformator } from "./types";
 
 export interface IAttrOptions {
   readonly nullable: boolean;
@@ -12,11 +15,15 @@ export interface IAttrOptions {
 
   readonly args: ReadonlyArray<any>;
 
+  readonly help: string;
+
   getDefaultValue(): any;
 }
 
 export interface IAttrDef extends IAttrOptions {
   readonly type: IAttrConstructor | IModelConstructor<any>;
+
+  readonly label: string;
 }
 
 export interface IAttrDefs {

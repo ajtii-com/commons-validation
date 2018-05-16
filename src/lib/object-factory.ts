@@ -1,15 +1,14 @@
 import { Env, Side } from "@ajtii/commons-env";
+import { AttrTree } from "./attr-tree";
 import {
-  AttrTree,
-  IAttr,
   IAttrConstructor,
-  IModel,
   IModelConstructor,
   IObjectProvider,
-  RawAttr,
-  RawModel,
-  Result,
-} from ".";
+} from "./interfaces";
+import { RawAttr } from "./raw-attr";
+import { RawModel } from "./raw-model";
+import { Result } from "./result";
+import { IAttr, IModel } from "./types";
 
 export class ObjectFactory {
   public constructor(private readonly objectProvider: IObjectProvider) {}

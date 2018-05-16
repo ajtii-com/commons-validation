@@ -227,7 +227,7 @@ describe("RawModel", () => {
 
           expect(a.value).to.eq(null);
 
-          expect(aBvSpy.calledOnceWith(true, 42)).to.eq(true);
+          expect(aBvSpy.calledOnceWith(true, [42])).to.eq(true);
 
           expect(bTransfStub.calledOnceWith(null, match.func, match({}))).to.eq(
             true,
@@ -314,7 +314,7 @@ describe("RawModel", () => {
       rawModel
         .validate(validateStub)
         .then(() => {
-          expect(aValidateStub.calledOnceWith(true, 42)).to.eq(true);
+          expect(aValidateStub.calledOnceWith(true, [42])).to.eq(true);
 
           expect(aRes.forModel.calledOnceWith("x", "a")).to.eq(true);
 
@@ -387,7 +387,7 @@ describe("RawModel", () => {
       rawModel
         .afterValidate(hookSpy)
         .then(() => {
-          expect(aAvSpy.calledOnceWith(true, 42)).to.eq(true);
+          expect(aAvSpy.calledOnceWith(true, [42])).to.eq(true);
 
           expect(bAvSpy.calledOnceWith(false)).to.eq(true);
 

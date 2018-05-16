@@ -1,4 +1,4 @@
-import { IReadonlyDepValues, Transformator } from ".";
+import { IReadonlyDepValues, Transformator } from "./types";
 
 export const transformIfOneDepUnset: Transformator = (
   value,

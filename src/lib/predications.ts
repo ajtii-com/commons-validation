@@ -1,4 +1,8 @@
-import { IAttrConstructor, IModelConstructor, IResultResponse } from ".";
+import {
+  IAttrConstructor,
+  IModelConstructor,
+  IResultResponse,
+} from "./interfaces";
 
 export function isAttrType(
   type: IAttrConstructor | IModelConstructor<any>,

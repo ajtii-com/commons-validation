@@ -1,12 +1,8 @@
 import { Env, Side } from "@ajtii/commons-env";
-import {
-  Hook,
-  IAttr,
-  IObjectProvider,
-  ObjectFactory,
-  Result,
-  Validator,
-} from ".";
+import { IObjectProvider } from "./interfaces";
+import { ObjectFactory } from "./object-factory";
+import { Result } from "./result";
+import { Hook, IAttr, Validator } from "./types";
 
 export class RawAttr {
   // tslint because of !

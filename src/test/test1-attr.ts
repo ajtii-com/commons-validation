@@ -2,9 +2,7 @@ import { newLogicError } from "@ajtii/commons-error";
 import { AbstractAttr, Result } from "..";
 
 export class Test1Attr extends AbstractAttr {
-  public readonly label = "Test 1 Attribute";
-
-  protected async doValidate(nullable: boolean, allowB: any) {
+  protected async doValidate(nullable: boolean, [allowB]: ReadonlyArray<any>) {
     if (typeof allowB === "undefined") {
       allowB = false;
     }

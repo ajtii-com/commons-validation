@@ -4,15 +4,13 @@ import {
   IAttrConstructor,
   IAttrDef,
   IAttrDefs,
-  IModel,
   IModelConstructor,
-  IPartialAttrOptions,
-  IReadonlyAttrDefs,
-  isAttrType,
-  RawModel,
-  Result,
-  transformIfOneDepUnset,
-} from ".";
+} from "./interfaces";
+import { isAttrType } from "./predications";
+import { RawModel } from "./raw-model";
+import { Result } from "./result";
+import { transformIfOneDepUnset } from "./transformators";
+import { IModel, IPartialAttrOptions, IReadonlyAttrDefs } from "./types";
 
 export abstract class AbstractModel {
   public static readonly classType: "model" = "model";
@@ -26,6 +24,7 @@ export abstract class AbstractModel {
   public defineAttr(
     name: string,
     type: IAttrConstructor | IModelConstructor<any>,
+    label: string,
     options: IPartialAttrOptions = {},
   ) {
     if (this.isProto === false) {
@@ -43,6 +42,7 @@ export abstract class AbstractModel {
 
     this._attrDefs[name] = {
       type,
+      label,
       nullable: options.nullable || false,
       defaultValue:
         typeof options.defaultValue === "undefined"
@@ -53,6 +53,7 @@ export abstract class AbstractModel {
       dependsOn: options.dependsOn || [],
       transform: options.transform || transformIfOneDepUnset,
       args: options.args || [],
+      help: options.help || "",
       getDefaultValue:
         options.getDefaultValue ||
         function(this: IAttrDef) {
@@ -90,12 +91,6 @@ export abstract class AbstractModel {
     return this.model.name;
   }
 
-  public abstract get label(): string;
-
-  public get help() {
-    return "";
-  }
-
   public get value() {
     return this.model.value;
   }
@@ -108,24 +103,22 @@ export abstract class AbstractModel {
     return this.model.init(this);
   }
 
-  public beforeValidate(nullable: boolean, ...args: any[]) {
+  public beforeValidate(nullable: boolean, args: ReadonlyArray<any>) {
     return this.model.beforeValidate(() =>
-      this.doBeforeValidate(nullable, ...args),
+      this.doBeforeValidate(nullable, args),
     );
   }
 
-  public validate(nullable: boolean, ...args: any[]) {
-    return this.model.validate(() => this.doValidate(nullable, ...args));
+  public validate(nullable: boolean, args: ReadonlyArray<any>) {
+    return this.model.validate(() => this.doValidate(nullable, args));
   }
 
-  public afterValidate(nullable: boolean, ...args: any[]) {
-    return this.model.afterValidate(() =>
-      this.doAfterValidate(nullable, ...args),
-    );
+  public afterValidate(nullable: boolean, args: ReadonlyArray<any>) {
+    return this.model.afterValidate(() => this.doAfterValidate(nullable, args));
   }
 
-  public run(...args: any[]) {
-    return this.model.run(...args);
+  public run(args: ReadonlyArray<any> = []) {
+    return this.model.run(args);
   }
 
   protected get env() {
@@ -138,19 +131,19 @@ export abstract class AbstractModel {
 
   protected async doBeforeValidate(
     nullable: boolean,
-    ...args: any[]
+    args: ReadonlyArray<any>,
   ): Promise<void> {
     return;
   }
 
   protected abstract async doValidate(
     nullable: boolean,
-    ...args: any[]
+    args: ReadonlyArray<any>,
   ): Promise<Result>;
 
   protected async doAfterValidate(
     nullable: boolean,
-    ...args: any[]
+    args: ReadonlyArray<any>,
   ): Promise<void> {
     return;
   }

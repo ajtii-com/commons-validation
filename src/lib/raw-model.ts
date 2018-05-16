@@ -1,18 +1,13 @@
 import { Env, Side } from "@ajtii/commons-env";
 import { newLogicError } from "@ajtii/commons-error";
-import {
-  AbstractAttr,
-  AbstractModel,
-  AttrTree,
-  Hook,
-  IDepValues,
-  IModel,
-  IObjectProvider,
-  isAttrType,
-  ObjectFactory,
-  Result,
-  Validator,
-} from ".";
+import { AbstractAttr } from "./abstract-attr";
+import { AbstractModel } from "./abstract-model";
+import { AttrTree } from "./attr-tree";
+import { IDepValues, IObjectProvider } from "./interfaces";
+import { ObjectFactory } from "./object-factory";
+import { isAttrType } from "./predications";
+import { Result } from "./result";
+import { Hook, IModel, Validator } from "./types";
 
 export class RawModel {
   // tslint because of !
@@ -139,7 +134,7 @@ export class RawModel {
           depValues,
         );
 
-        await attr.beforeValidate(attrDef.nullable, ...attrDef.args);
+        await attr.beforeValidate(attrDef.nullable, attrDef.args);
       }
     }
 
@@ -156,7 +151,7 @@ export class RawModel {
 
         const r1 = (await attr.validate(
           attrDef.nullable,
-          ...attrDef.args,
+          attrDef.args,
         )).forModel(this.name, name);
 
         results.push(r1);
@@ -176,7 +171,7 @@ export class RawModel {
         const attrDef = this.model.attrDefs[name];
         const attr = this.getAttr(name);
 
-        await attr.afterValidate(attrDef.nullable, ...attrDef.args);
+        await attr.afterValidate(attrDef.nullable, attrDef.args);
       }
     }
 
@@ -209,10 +204,10 @@ export class RawModel {
     return this.objectFactory.newOkResult();
   }
 
-  public async run(...args: any[]) {
-    await this.model.beforeValidate(false, ...args);
-    const r = await this.model.validate(false, ...args);
-    await this.model.afterValidate(false, ...args);
+  public async run(args: ReadonlyArray<any>) {
+    await this.model.beforeValidate(false, args);
+    const r = await this.model.validate(false, args);
+    await this.model.afterValidate(false, args);
     return r;
   }
 }

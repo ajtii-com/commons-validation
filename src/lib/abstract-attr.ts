@@ -1,5 +1,6 @@
 import { Env, Side } from "@ajtii/commons-env";
-import { RawAttr, Result } from ".";
+import { RawAttr } from "./raw-attr";
+import { Result } from "./result";
 
 export abstract class AbstractAttr {
   public static readonly classType: "attr" = "attr";
@@ -14,12 +15,6 @@ export abstract class AbstractAttr {
     return this.attr.name;
   }
 
-  public abstract get label(): string;
-
-  public get help() {
-    return "";
-  }
-
   public get value() {
     return this.attr.value;
   }
@@ -28,20 +23,18 @@ export abstract class AbstractAttr {
     this.attr.value = value;
   }
 
-  public beforeValidate(nullable: boolean, ...args: any[]) {
+  public beforeValidate(nullable: boolean, args: ReadonlyArray<any>) {
     return this.attr.beforeValidate(() =>
-      this.doBeforeValidate(nullable, ...args),
+      this.doBeforeValidate(nullable, args),
     );
   }
 
-  public validate(nullable: boolean, ...args: any[]) {
-    return this.attr.validate(() => this.doValidate(nullable, ...args));
+  public validate(nullable: boolean, args: ReadonlyArray<any>) {
+    return this.attr.validate(() => this.doValidate(nullable, args));
   }
 
-  public afterValidate(nullable: boolean, ...args: any[]) {
-    return this.attr.afterValidate(() =>
-      this.doAfterValidate(nullable, ...args),
-    );
+  public afterValidate(nullable: boolean, args: ReadonlyArray<any>) {
+    return this.attr.afterValidate(() => this.doAfterValidate(nullable, args));
   }
 
   protected get env() {
@@ -54,19 +47,19 @@ export abstract class AbstractAttr {
 
   protected async doBeforeValidate(
     nullable: boolean,
-    ...args: any[]
+    args: ReadonlyArray<any>,
   ): Promise<void> {
     return;
   }
 
   protected abstract async doValidate(
     nullable: boolean,
-    ...args: any[]
+    args: ReadonlyArray<any>,
   ): Promise<Result>;
 
   protected async doAfterValidate(
     nullable: boolean,
-    ...args: any[]
+    args: ReadonlyArray<any>,
   ): Promise<void> {
     return;
   }
